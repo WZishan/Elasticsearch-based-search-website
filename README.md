@@ -1,6 +1,8 @@
-# sbx-elastic
+# Introduction
 
-Free text search service for investment data
+Back end of free text search website based on Elasticsearch engine. This project developed a robust search web application that not only provides basic word search over the whole database capabilities but also incorporates features such as spelling correction, auto-completion, and synonym matching.
+
+This work is the project under the master thesis at the University of Zurich and Allianz.
 
 ## Set up
 
@@ -32,6 +34,13 @@ In directory /Script:
   "db_name": # datebase name
 }
 ```
+
+In directory： {where you installed Elasticsearchl}\elasticsearch-8.9.1\config\dictionaries 
+
+* synonyms.txt
+ipod, i-pod, i pod
+foozball , foosball
+universe , cosmos
 
 In directory /sbx-search add file settings.ini or add variables in your environment variables
 
