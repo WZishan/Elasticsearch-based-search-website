@@ -1,0 +1,45 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  namespace: sbx-elastic
+spec:
+  version: 8.11.3
+  # image: docker.io/elastic/elasticsearch:8.11.3
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  nodeSets:
+  - name: default
+    count: 1
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          volumeMounts:
+          - name: synonyms 
+            mountPath: /usr/share/elasticsearch/config/dictionaries
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms512M -Xmx512M
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1024Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2048Mi"
+        tolerations:
+        - key: "kubernetes.azure.com/scalesetpriority"
+          operator: "Equal"
+          value: "spot" 
+          effect: "NoSchedule"
+        volumes:
+        - name: synonyms
+          configMap:
+            name: synonyms 
+    config:
+      node.store.allow_mmap: false
+      http.cors.enabled: true
+      http.cors.allow-origin: "*"

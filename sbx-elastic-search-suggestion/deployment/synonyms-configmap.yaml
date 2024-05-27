@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synonyms
+  namespace: sbx-elastic
+data:
+  synonyms.txt: |
+    # Blank lines and lines starting with pound are comments.
+    # Explicit mappings match any token sequence on the LHS of "=>"
+    # and replace with all alternatives on the RHS.  These types of mappings
+    # ignore the expand parameter in the schema.
+    # Examples:
+    # i-pod, i pod => ipod
+    # sea biscuit, sea biscit => seabiscuit
+    # Equivalent synonyms may be separated with commas and give
+    # no explicit mapping.  In this case the mapping behavior will
+    # be taken from the expand parameter in the schema.  This allows
+    # the same synonym file to be used in different synonym handling strategies.
+    # Examples:
+    # ipod, i-pod, i pod
+    # foozball , foosball
+    # universe , cosmos
+    # lol, laughing out loud
+    zero, 0
+    one, 1, I
+    two, 2, II
+    three, 3, III
+    four, 4, IV
+    five, 5, V
+    six, 6, VI
+    seven, 7, VII
+    eight, 8, VIII
+    nine, 9, IX
+    ten, 10, X
+    eleven, 11, XI
+    twelve, 12, XII
+    BMW, Bayerische Motoren Werke
+    inv, investment
+    azl, allianz leben
+    isv, inhaberschuldverschreibung
+    svb, Silicon Valley Bank

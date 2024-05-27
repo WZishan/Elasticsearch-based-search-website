@@ -1,0 +1,11 @@
+{
+  "tokenizer": "whitespace",
+  "filter": [
+    {
+      "type": "pattern_replace",
+      "pattern": "(.* )",
+      "replacement": ""
+    }
+  ],
+  "text": ["allianz fond","foxes jump lazy dogs"]
+}

@@ -1,0 +1,4 @@
+{"index": {"_id": "1"}}
+{"dnod_name": "Allianz Leben", "dinv_sink_c_namex": "LA01_EUR_BMHR_0269_ LA01_EUR_BMHR_0269_0003_15_BB-_AA+_1_13_DE_EUR_CONST_ANN_M01", "dinv_oinh_c_namex": "LA01_EUR_BMHR_0269_0003_15_BB-_AA+_1_13_DE_EUR_CONST_ANN_M01", "ultimate_issuer": "MORTGAGE_DE", "direct_issuer": "MORTGAGE_DE", "stan_local_por_lv_5": "Mortgages", "decu_name": "Allianz Leben AG, Stuttg.", "id": 1}
+{"index": {"_id": "2"}}
+{"dnod_name": "Allianz Leben", "dinv_sink_c_namex": "MORTGAGE_DE01_950026931_EUR 950026931_P01_EUR", "dinv_oinh_c_namex": "MORTGAGE_DE01_950026931_EUR", "ultimate_issuer": "MORTGAGE_DE", "direct_issuer": "MORTGAGE_DE", "stan_local_por_lv_5": "Mortgages", "decu_name": "Allianz Leben AG, Stuttg.", "id": 2}

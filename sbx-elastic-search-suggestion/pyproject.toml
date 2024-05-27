@@ -1,0 +1,12 @@
+[tool.black]
+target-version = ['py39']
+force-exclude = '''
+(
+    \.mypy_cache
+  | \.pytest_cache
+  | \.git
+  | conf\.py
+  | \/setup\.py
+)
+'''
+line-length = 100

@@ -1,0 +1,6 @@
+elasticsearch
+fastapi[all]
+uvicorn
+aiohttp
+pandas
+requests

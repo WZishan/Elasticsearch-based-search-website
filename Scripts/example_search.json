@@ -1,0 +1,43 @@
+{
+  "query": {
+    "multi_match": {
+      "query": "apple",
+      "type": "cross_fields",
+      "operator": "and",
+      "fields": [ "title"],
+      "analyzer": "default_search"
+      }
+    },
+  "suggest": {
+    "text": "alliant",
+    "simple_phrase": {
+      "phrase": {
+        "field": "title.phrase",
+        "size": 5,
+//        "confidence": 0,
+        "direct_generator": [
+          {
+            "field": "title.phrase"
+          }
+        ],
+        "highlight": {
+          "pre_tag": "<em>",
+          "post_tag": "</em>"
+        }
+      }
+    },
+    "simple_term" : {
+        "term" : {
+          "field": "title.term",
+          "sort": "frequency"
+        }
+      },
+     "simple_completion": {
+        "prefix": "",
+        "completion": {
+            "field": "title.completion",
+            "size": 1000
+      }
+    }
+  }
+}

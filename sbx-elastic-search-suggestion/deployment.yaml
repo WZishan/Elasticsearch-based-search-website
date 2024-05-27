@@ -1,0 +1,93 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sbx-elastic
+  namespace: sbx-elastic
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "cockpit.aim-cluster-001.aim-general-d.gwc1.azure.aztec.cloud.allianz, sbx-cockpit.aim-cluster-001.aim-general-d.gwc1.azure.aztec.cloud.allianz"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
+    nginx.ingress.kubernetes.io/upstream-vhost: sbx-elastic.sbx-elastic.svc.cluster.local
+  labels:
+    name: sbx-elastic
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sbx-elastic.aim-cluster-001.aim-general-d.gwc1.azure.aztec.cloud.allianz
+  rules:
+    - host: sbx-elastic.aim-cluster-001.aim-general-d.gwc1.azure.aztec.cloud.allianz
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: sbx-elastic
+                port:
+                  number: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sbx-elastic
+  namespace: sbx-elastic
+  # should not be needed
+  # annotations:
+    # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: sbx-elastic
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: http
+---
+
+# redis_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sbx-elastic
+  namespace: sbx-elastic
+spec:
+  selector:
+    matchLabels: # match all pods with the defined labels
+      app: sbx-elastic
+  template: #pod
+    metadata:
+      labels:
+        app: sbx-elastic
+    spec:
+      containers: #containers
+        - image: azadpk8szrrlk0gofuw9.azurecr.io/sbx-elastic/search-api:develop
+          env:
+          - name: ELASTICSEARCH_URL
+            value: http://elasticsearch-es-http.sbx-elastic.svc.cluster.local:9200
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-es-elastic-user
+                key: elastic
+          - name: ELASTICSEARCH_USERNAME
+            value: elastic
+          name: sbx-elastic
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "2Gi"
+          ports:
+            - containerPort: 8000 # this container exposes port 8080
+              name: http # name port http
+      tolerations:
+        - key: "kubernetes.azure.com/scalesetpriority"
+          operator: "Equal"
+          value: "spot"
+          effect: "NoSchedule"

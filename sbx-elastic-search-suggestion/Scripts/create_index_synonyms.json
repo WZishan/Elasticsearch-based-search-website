@@ -1,0 +1,33 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "default": {
+          "type": "custom", 
+          "tokenizer": "classic",
+          "char_filter": [
+            "html_strip"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop",
+            "classic",
+            "stemmer",
+            "synonym"
+          ]
+        }
+      },
+      "filter": {
+        "english_stop": { 
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "synonym": {
+          "type": "synonym",
+          "synonyms_path": "synonyms.txt"
+        }
+      }
+    }
+  }
+}

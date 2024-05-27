@@ -1,0 +1,149 @@
+{
+  "settings": {
+    "index": {
+      "max_ngram_diff": 15,
+      "max_shingle_diff": 8
+    },
+    "analysis": {
+      "analyzer": {
+        // for default index
+        "default": {
+          "type": "custom",
+          "tokenizer": "classic",
+          "char_filter": [
+            "html_strip",
+            "my_mappings_char_filter"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop",
+            "classic",
+            "kstem",
+            "n_grams"
+          ]
+        },
+        // for default search and term suggester
+        "default_search": {
+          "type": "custom",
+          "tokenizer": "classic",
+          "char_filter": [
+            "html_strip",
+            "my_mappings_char_filter"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop",
+            "classic",
+            "kstem",
+            "synonym"
+          ]
+        },
+        //  for phrase suggester
+        "shingle_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip",
+            "my_mappings_char_filter"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop",
+            "kstem",
+            "n_shingle"
+          ]
+        },
+//        for complete suggester to give suggestions from middle of phrase
+        "autocomplete_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip",
+            "my_mappings_char_filter"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop",
+            "kstem",
+            "n_shingle",
+            "after_last_space",
+            "preserve_only_first"
+          ]
+        }
+      },
+      "char_filter": {
+        "my_mappings_char_filter": {
+          "type": "mapping",
+          "mappings": [
+            "_ => \\u0020"
+          ]
+        }
+      },
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "synonym": {
+          "type": "synonym_graph",
+          "synonyms_path": "dictionaries/synonyms.txt"
+        },
+        //  for phrase suggester
+        "n_shingle": {
+          "type": "shingle",
+          "min_shingle_size": 2,
+          "max_shingle_size": 4
+        },
+        //for index match sub string
+        "n_grams": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 15
+        },
+        "preserve_only_first": {
+          "type": "predicate_token_filter",
+          "script": {
+            "source": "token.position == 0"
+          }
+        },
+        "after_last_space": {
+          "type": "pattern_replace",
+          "pattern": "(.* )",
+          "replacement": ""
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "fielddata": true,
+        "fields": {
+          //  for phrase suggester
+          "phrase": {
+            "type": "text",
+            "analyzer": "shingle_analyzer"
+          },
+          //  for auto-completion suggester
+          "complete": {
+            "type": "completion",
+            "preserve_position_increments": false,
+            "search_analyzer": "default_search",
+            "analyzer": "autocomplete_analyzer"
+          },
+          // for term suggester
+          "term": {
+            "type": "text",
+            "fielddata": true,
+            "analyzer": "default_search"
+          }
+        }
+      }
+    }
+  }
+}
